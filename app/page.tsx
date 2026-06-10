@@ -3,181 +3,138 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 
 // ─── Data ─────────────────────────────────────────────────────────────
-// TODO: Replace placeholder entries below with your real experience, projects, etc.
 
-const experience = [
-  { name: '[Company Name]', year: '2025', role: '[Your Role]' },
-  { name: '[Company Name]', year: '2024', role: '[Your Role]' },
+type OrgEntry = { initials: string; name: string; year: string; role: string; logo?: string; bg?: string; fg?: string; desc?: string[] };
+type ProgramEntry = { initials: string; name: string; program: string; year: string; logo?: string; bg?: string; fg?: string; desc?: string[] };
+
+const experience: OrgEntry[] = [
+  { initials: 'SC', bg: '#6d28d9', fg: '#fff', logo: '/logos/simcodes.svg', name: 'SIMCODES', year: 'May – Sep 2025', role: 'Machine Learning Research Intern', desc: [
+    'Increased AI/ML model accuracy by 12% through feature engineering on simulation datasets exceeding 50 GB.',
+    'Streamlined algorithmic efficiency by up to 62% by developing ML pipelines for metal-ion binding predictions (Python, Bash).',
+    'Modeled 700+ ligand–protein complexes using NumPy, RDKit, and quantum chemistry tools.',
+  ]},
+  { initials: 'WS', bg: '#be185d', fg: '#fff', logo: '/logos/wesparkle.png', name: 'We Sparkle Co.', year: 'Jun – Sep 2024', role: 'Software Engineer Consultant', desc: [
+    'Built a customizable chatbot used by 250+ business owners using React.js and Node.js.',
+    'Designed an intuitive UI enabling non-technical users to configure chatbot behavior.',
+    'Implemented Firebase APIs to store and manage customization choices by business ID.',
+  ]},
+  { initials: 'CFG', bg: '#15803d', fg: '#fff', logo: '/logos/codeforgood.svg', name: 'CodeForGood', year: 'Jan 2024 – Pres', role: 'Software Engineer', desc: [
+    'Provided pro-bono technical and computer science assistance to businesses and non-profits in the Madison area.',
+  ]},
+  { initials: 'AT', bg: '#00a8e0', fg: '#fff', logo: '/logos/att.svg', name: 'AT&T', year: 'Jun – Sep 2024', role: 'Technology Academy Fellow', desc: [
+    'Selected for the competitive AT&T 2024 Technology Academy program for top tech talent.',
+    'Developed skills in Machine Learning, REST APIs, and enterprise software development.',
+  ]},
+  { initials: 'UW', bg: '#c5050c', fg: '#fff', logo: '/logos/uw.svg', name: 'UW–Madison DoIT', year: 'Oct 2022 – Sep 2024', role: 'Help Desk Support Agent', desc: [
+    'Resolved 200+ cases with call times ~40% faster than the department standard.',
+    'Guided users through software and hardware troubleshooting, translating complex concepts into accessible guidance.',
+    'Produced accurate documentation while managing a high volume of customer-facing interactions.',
+  ]},
+  { initials: 'BP', bg: '#c5050c', fg: '#fff', logo: '/logos/uw.svg', name: 'Badger Precollege', year: 'Jun – Aug 2023', role: 'Residential Mentor', desc: [
+    'Directly supervised approximately 140 student program participants daily.',
+    'Facilitated difficult conversations about sensitive topics to create safe and inclusive spaces.',
+    'Developed teamwork skills working alongside a partner as part of the larger Residential Mentor team.',
+  ]},
+  { initials: 'ST', bg: '#0f766e', fg: '#fff', logo: '/logos/rushtranslate.svg', name: 'Somali Translation', year: 'May 2019 – Apr 2021', role: 'Refugee Services Translator', desc: [
+    'Assisted refugees in job search and housing endeavors in the Milwaukee area.',
+    'Aided in applying for necessary documentation including social security and mortgage applications.',
+  ]},
 ];
 
-const involvement = [
-  { name: '[Organization Name]', year: '2023–Present', role: '[Your Role]' },
-  { name: '[Organization Name]', year: '2022–Present', role: '[Your Role]' },
+const involvement: OrgEntry[] = [
+  { initials: 'NSBE', bg: '#1e3a5f', fg: '#fbbf24', logo: '/logos/nsbe.svg', name: 'National Society of Black Engineers', year: 'Nov 2022 – Present', role: 'Member', desc: [
+    'Engaged in networking and professional development supporting underrepresented STEM students.',
+    'Contributed to initiatives through collaboration, advocacy, and community outreach.',
+  ]},
+  { initials: 'CS', bg: '#0d9488', fg: '#fff', logo: '/logos/colorstack.svg', name: 'ColorStack', year: '2022 – Present', role: 'Member', desc: [
+    'Member of a community supporting Black and Latinx CS students in reaching their full academic and professional potential.',
+  ]},
+  { initials: 'BA', bg: '#047857', fg: '#fff', logo: '/logos/biokind_icon.png', name: 'Biokind Analytics', year: 'Jan 2024 – Present', role: 'Data Analyst', desc: [
+    'Collaborated with medical non-profits in Madison, WI to facilitate data exchange and communication.',
+    'Executed statistical analyses using R to identify patterns, correlations, and trends in organizational data.',
+    'Developed data visualizations using R packages to present key insights and data trends.',
+  ]},
+  { initials: 'LFS', bg: '#c2410c', fg: '#fff', name: 'Learn From Scratch', year: 'May 2023 – Aug 2024', role: 'Co-founder', desc: [
+    'Designed curriculum and facilitated learning for 100 fourth–sixth graders across four semesters.',
+    'Guided students to write their first code and complete open-ended projects building creativity and problem-solving.',
+  ]},
+  { initials: 'BGC', bg: '#003087', fg: '#fff', logo: '/logos/bgc.svg', name: 'Boys & Girls Club', year: 'Aug 2017 – Present', role: 'Graduation Plus Member', desc: [
+    'Long-standing member of the Boys & Girls Club Graduation Plus program since 2017.',
+  ]},
+  { initials: 'PP', bg: '#1d4ed8', fg: '#fff', name: 'People Program', year: 'May 2017 – Present', role: 'UW–Madison Member', desc: [
+    'PEOPLE Scholar at the University of Wisconsin–Madison, a program supporting first-generation college students.',
+  ]},
 ];
 
-const programs = [
-  { name: '[Company]', program: '[Program Name]', year: '2024' },
-  { name: '[Company]', program: '[Program Name]', year: '2024' },
+const programs: ProgramEntry[] = [
+  { initials: 'AT', bg: '#00a8e0', fg: '#fff', logo: '/logos/att.svg', name: 'AT&T', program: 'AT&T 2024 Technology Academy', year: '2024', desc: [
+    'Issued by AT&T College Recruiting — Jul 2024.',
+    'Skills: Machine Learning, REST APIs.',
+  ]},
+  { initials: 'LI', bg: '#0077b5', fg: '#fff', logo: '/logos/linkedin.svg', name: 'LinkedIn', program: 'Learning Git and GitHub', year: '2023', desc: [
+    'Issued by LinkedIn Learning — Jun 2023.',
+    'Skills: Git, GitHub.',
+  ]},
 ];
 
 const projects = [
   {
-    name: '[Project Name]',
-    desc: '[Short description of what this project does and the problem it solves.]',
-    tags: ['React', 'TypeScript', 'Node.js'],
+    name: 'Abdifataabdi.me',
+    desc: 'Personal portfolio website built from scratch. Features a visitor map with real-time geolocation, Cal.com scheduling integration, and company logos pulled from official brand sources.',
+    tags: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'MapLibre GL', 'Upstash Redis'],
     link: 'https://github.com/Abdifatah2002',
   },
   {
-    name: '[Project Name]',
-    desc: '[Short description of what this project does and the problem it solves.]',
-    tags: ['Python', 'Flask', 'PostgreSQL'],
+    name: 'MyHealthPal',
+    desc: 'GPT-powered virtual health assistant for symptom checks, prevention tips, and geolocated clinic suggestions. Trained a custom neural net on 1.6M+ tweets achieving 94% sentiment accuracy.',
+    tags: ['TensorFlow', 'Spring Boot', 'React', 'Flask', 'Supabase', 'OpenCV'],
     link: 'https://github.com/Abdifatah2002',
   },
   {
-    name: '[Project Name]',
-    desc: '[Short description of what this project does and the problem it solves.]',
-    tags: ['Java', 'Spring Boot'],
+    name: 'Hydration Mate',
+    desc: 'Mobile app helping users meet daily water intake goals. Firebase Realtime DB for cross-device sync and secure auth with historical hydration logs.',
+    tags: ['React Native', 'Expo Go', 'AWS Amplify', 'Firebase', 'Tailwind CSS'],
     link: 'https://github.com/Abdifatah2002',
   },
 ];
 
-const techCategories: Array<{ name: string; items: string[] }> = [
-  // TODO: Update with your actual tech stack
-  { name: 'Languages', items: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C/C++', 'HTML/CSS', 'SQL'] },
-  { name: 'Frameworks & Libraries', items: ['React', 'Next.js', 'Node.js', 'Express', 'Flask', 'TailwindCSS'] },
-  { name: 'Tools & Infrastructure', items: ['Git', 'Docker', 'AWS', 'PostgreSQL', 'MongoDB', 'Jira', 'Agile'] },
+const techCategories = [
+  { name: 'Languages',              items: ['Java', 'Python', 'JavaScript', 'SQL', 'HTML/CSS', 'R', 'Bash'] },
+  { name: 'Frameworks & Libraries', items: ['React', 'Node.js', 'Flask', 'Spring Boot', 'Expo', 'Tailwind', 'Firebase', 'PyTorch', 'pandas', 'NumPy', 'Matplotlib'] },
+  { name: 'Tools',                  items: ['Git', 'Docker', 'AWS', 'Google Cloud', 'VS Code', 'IntelliJ', 'PyCharm'] },
 ];
 
-type Post = { date: string; title: string; lede?: string; hero?: string; paragraphs: string[] };
+type Post = { date: string; title: string; lede?: string; paragraphs: string[] };
 
 const posts: Post[] = [
-  // TODO: Replace with your own writing.
   {
     date: '2025',
-    title: '[Your First Post Title]',
-    lede: '[One-sentence hook for your post.]',
+    title: 'Teaching Kids to Code Changed How I Think About Software',
+    lede: 'A year co-founding Learn From Scratch taught me that the hardest part of programming isn\'t syntax — it\'s helping someone believe they can do it.',
     paragraphs: [
-      '[Opening paragraph.]',
-      '[Second paragraph.]',
-      '[Closing paragraph.]',
+      'In May 2023 I co-founded Learn From Scratch, a program that guided 100 fourth through sixth graders through writing their first lines of code over four semesters. I expected to teach Python. I didn\'t expect it to reshape how I think about building software.',
+      'Most of those kids had never opened a code editor. The first day was chaos — every error message landed like a personal insult. But by week three something shifted. They stopped treating bugs as failures and started treating them as puzzles. That mental reframe is exactly what separates good engineers from stuck ones.',
+      'The experience reinforced something I carry into every project: software is only as good as the person it was built for. Watching a ten-year-old light up when their first loop ran correctly is a better benchmark for good UX than any design system I\'ve read.',
     ],
   },
 ];
 
-// ─── Graph: W₆ wheel ──────────────────────────────────────────────────
+// ─── Exp Icon ────────────────────────────────────────────────────────
 
-type PyramidVertex = { id: string; label: string; full: string; section: string };
-
-const NODES: PyramidVertex[] = [
-  { id: 'intro',        label: '0', full: 'Intro',        section: '#intro' },
-  { id: 'experience',   label: '1', full: 'Experience',   section: '#experience' },
-  { id: 'technologies', label: '2', full: 'Technologies', section: '#technologies' },
-  { id: 'projects',     label: '3', full: 'Projects',     section: '#projects' },
-  { id: 'writing',      label: '4', full: 'Writing',      section: '#writing' },
-  { id: 'visitor',      label: '5', full: 'Visitor',      section: '#last-visitor' },
-  { id: 'contact',      label: '6', full: 'Contact',      section: '#contact' },
-];
-
-const APEX_Y = -94;
-const BASE_CY = 32;
-const BASE_RX = 96;
-const BASE_RY = 22;
-const BASE_ANGLES_DEG = [90, 30, -30, -90, -150, 150];
-
-function pyramidPos(label: string) {
-  if (label === '0') return { x: 0, y: APEX_Y, back: false };
-  const i = parseInt(label, 10) - 1;
-  const rad = (BASE_ANGLES_DEG[i] * Math.PI) / 180;
-  return { x: BASE_RX * Math.cos(rad), y: BASE_CY - BASE_RY * Math.sin(rad), back: Math.sin(rad) > 0.1 };
-}
-
-const EDGES: Array<{ a: string; b: string; kind: 'front' | 'back' | 'connector' }> = (() => {
-  const out: Array<{ a: string; b: string; kind: 'front' | 'back' | 'connector' }> = [];
-  const baseIds = NODES.slice(1).map(n => n.id);
-  for (const id of baseIds) out.push({ a: 'intro', b: id, kind: 'connector' });
-  for (let i = 0; i < 6; i++) {
-    const a = baseIds[i], b = baseIds[(i + 1) % 6];
-    let diff = BASE_ANGLES_DEG[(i + 1) % 6] - BASE_ANGLES_DEG[i];
-    if (diff > 180) diff -= 360; if (diff < -180) diff += 360;
-    const midRad = (BASE_ANGLES_DEG[i] + diff / 2) * Math.PI / 180;
-    out.push({ a, b, kind: Math.sin(midRad) > 0.1 ? 'back' : 'front' });
-  }
-  return out;
-})();
-
-// ─── Pyramid3D ────────────────────────────────────────────────────────
-
-type PyramidProps = {
-  size: number; active?: string | null; showLabels?: boolean;
-  interactive?: boolean; building?: boolean;
-  onNodeClick?: (id: string) => void; className?: string;
-};
-
-function Pyramid3D({ size, active, showLabels, interactive, building, onNodeClick, className }: PyramidProps) {
-  const positions = NODES.reduce((acc, n) => { acc[n.id] = pyramidPos(n.label); return acc; }, {} as Record<string, ReturnType<typeof pyramidPos>>);
+function ExpIcon({ initials, name, logo, bg, fg }: { initials: string; name: string; logo?: string; bg?: string; fg?: string }) {
+  const [failed, setFailed] = useState(false);
+  const showImg = !!logo && !failed;
+  const isLocalSvg = logo?.startsWith('/logos/');
   return (
-    <svg width={size} height={size} viewBox="-140 -140 280 280" className={`pyramid ${building ? 'is-building' : ''} ${className ?? ''}`} aria-hidden="true">
-      <g className="pyramid-edges">
-        {EDGES.map((e, i) => { const pa = positions[e.a], pb = positions[e.b]; return (
-          <line key={i} x1={pa.x} y1={pa.y} x2={pb.x} y2={pb.y} className={`pyramid-edge pyramid-edge-${e.kind}`} pathLength={1} style={{ ['--ei' as string]: i } as React.CSSProperties} />
-        ); })}
-      </g>
-      <g className="pyramid-nodes">
-        {NODES.map((n, i) => { const p = positions[n.id]; const isActive = active === n.id; return (
-          <g key={n.id} className={`pyramid-node-group ${p.back ? 'is-back' : 'is-front'} ${isActive ? 'is-active' : ''} ${interactive ? 'is-interactive' : ''}`}
-            style={{ ['--tx' as string]: `${p.x}px`, ['--ty' as string]: `${p.y}px`, ['--ni' as string]: i } as React.CSSProperties}
-            onClick={interactive && onNodeClick ? (e) => { e.stopPropagation(); onNodeClick(n.id); } : undefined}>
-            <circle cx="0" cy="0" r={p.back ? 3.4 : 4.4} className="pyramid-node" />
-            {interactive && <circle cx="0" cy="0" r={14} className="pyramid-node-hit" />}
-            {showLabels && <text x="0" y={p.back ? -10 : 14} className="pyramid-label" textAnchor="middle" dominantBaseline={p.back ? 'auto' : 'hanging'}>{n.full}</text>}
-          </g>
-        ); })}
-      </g>
-    </svg>
-  );
-}
-
-// ─── PyramidNav ──────────────────────────────────────────────────────
-
-type PyramidMode = 'loading' | 'docked' | 'expanded';
-
-function PyramidNav({ mode, active, onExpand, onCollapse, onNodeClick }: {
-  mode: PyramidMode; active: string | null;
-  onExpand: () => void; onCollapse: () => void; onNodeClick: (id: string) => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (mode !== 'expanded') return;
-    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) onCollapse(); };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, [mode, onCollapse]);
-  return (
-    <div ref={ref} className={`pyramid-nav is-${mode}`}
-      role={mode === 'docked' ? 'button' : undefined}
-      aria-label={mode === 'docked' ? 'Open navigation pyramid' : 'Section navigation pyramid'}
-      tabIndex={mode === 'docked' ? 0 : -1}
-      onClick={() => { if (mode === 'docked') onExpand(); }}
-      onKeyDown={(e) => { if (mode === 'docked' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onExpand(); } }}>
-      <Pyramid3D size={280} active={active} showLabels={mode !== 'docked'} interactive={mode === 'expanded'} building={mode === 'loading'} onNodeClick={onNodeClick} />
-      {mode === 'docked' && <span className="pyramid-nav-hint">W₆</span>}
-    </div>
-  );
-}
-
-// ─── LoadingOverlay ──────────────────────────────────────────────────
-
-const VISIT_KEY = 'portfolio_first_visit_v1';
-
-function LoadingOverlay({ fading }: { fading: boolean }) {
-  return (
-    <div className={`loader-bg ${fading ? 'is-fading' : ''}`} aria-hidden="true">
-      <div className="loader-stats">
-        <span className="ls-1">W₆ = (V, E)</span>
-        <span className="ls-2">|V| = 7</span>
-        <span className="ls-3">|E| = 12</span>
-        <span className="ls-4">— booting graph —</span>
-      </div>
+    <div
+      className="exp-icon"
+      style={showImg
+        ? (isLocalSvg ? { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 } : { background: '#f3f4f6' })
+        : { background: bg || 'var(--bg2)', color: fg || '#374151' }}
+    >
+      {showImg
+        ? <img src={logo} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 18 }} onError={() => setFailed(true)} />
+        : initials}
     </div>
   );
 }
@@ -201,27 +158,28 @@ function VisitorMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<{ city: string; country: string; ts: number; live: boolean } | null>(null);
   const [count, setCount] = useState<number | null>(null);
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let map: any = null;
     async function init() {
-      const KEY_LAST = 'portfolio_last_visitor_v2';
-      const getStored = () => { try { const r = localStorage.getItem(KEY_LAST); return r ? JSON.parse(r) : null; } catch { return null; } };
-      const setStored = (d: StoredVisitor) => localStorage.setItem(KEY_LAST, JSON.stringify(d));
+      const KEY = 'portfolio_last_visitor_v2';
+      const getStored = () => { try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; } catch { return null; } };
+      const setStored = (d: StoredVisitor) => localStorage.setItem(KEY, JSON.stringify(d));
       const stored = getStored();
       if (stored) setStatus({ city: stored.city, country: stored.country, ts: stored.ts, live: false });
       try { const res = await fetch('/api/visit'); const { count: gc } = await res.json(); setCount(gc); } catch {}
       const maplibregl = (await import('maplibre-gl')).default;
       await import('maplibre-gl/dist/maplibre-gl.css');
-      const lat = stored?.lat ?? 44.98, lon = stored?.lon ?? -93.27;
+      const lat = stored?.lat ?? 43.07, lon = stored?.lon ?? -89.40;
       map = new maplibregl.Map({
         container: mapRef.current!,
-        style: { version: 8, sources: { carto: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png'], tileSize: 256, attribution: '© CARTO, © OpenStreetMap contributors' } }, layers: [{ id: 'carto', type: 'raster', source: 'carto', minzoom: 0, maxzoom: 19 }] },
+        style: { version: 8, sources: { carto: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png'], tileSize: 256, attribution: '© CARTO © OpenStreetMap' } }, layers: [{ id: 'carto', type: 'raster', source: 'carto', minzoom: 0, maxzoom: 19 }] },
         center: [lon, lat], zoom: 4, interactive: true, attributionControl: { compact: true },
       });
       const addMarker = (lng: number, lt: number) => {
         const el = document.createElement('div');
-        el.style.cssText = 'width:10px;height:10px;border-radius:50%;background:#3b82f6;border:2px solid #fff;box-shadow:0 0 0 2px rgba(59,130,246,0.35);cursor:default;';
+        el.style.cssText = 'width:12px;height:12px;border-radius:50%;background:#2563eb;border:2px solid #fff;box-shadow:0 0 0 3px rgba(37,99,235,0.25)';
         new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([lng, lt]).addTo(map);
       };
       if (stored) map.on('load', () => addMarker(lon, lat));
@@ -240,52 +198,40 @@ function VisitorMap() {
     init();
     return () => { map?.remove(); };
   }, []);
+
   return (
-    <div style={{ fontFamily: 'var(--mono)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, minHeight: 18 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: 'var(--muted)' }}>
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#6b7280' }}>
           {status ? (<>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: status.live ? '#84a844' : '#888', flexShrink: 0, display: 'inline-block' }} />
-            <span>{status.live ? <strong style={{ color: 'var(--text)' }}>{timeAgo(status.ts)}</strong> : timeAgo(status.ts)}<span style={{ color: 'var(--muted)' }}> · {status.city}, {status.country}</span></span>
-          </>) : <span style={{ color: 'var(--muted)' }}>Loading…</span>}
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: status.live ? '#22c55e' : '#d1d5db', display: 'inline-block', flexShrink: 0 }} />
+            <span>{status.live ? <strong style={{ color: '#111827' }}>{timeAgo(status.ts)}</strong> : timeAgo(status.ts)} · {status.city}, {status.country}</span>
+          </>) : <span>Locating…</span>}
         </div>
-        {count !== null && (
-          <span style={{ fontSize: 10, letterSpacing: '0.12em', color: 'var(--muted)', border: '0.5px solid var(--border)', borderRadius: 20, padding: '3px 10px' }}>
-            <span style={{ color: 'var(--text)' }}>{count.toLocaleString()}</span> visitors
-          </span>
-        )}
+        {count !== null && <span style={{ fontSize: 12, color: '#9ca3af' }}>{count.toLocaleString()} visitors</span>}
       </div>
-      <div ref={mapRef} style={{ width: '100%', height: 360, borderRadius: 12, overflow: 'hidden', border: '1px solid var(--border)', background: '#e8eaed' }} />
-      <style>{`.maplibregl-ctrl-attrib{font-family:monospace!important;font-size:9px!important}.maplibregl-ctrl-group{border-radius:8px!important;overflow:hidden}.maplibregl-ctrl-group button{background:white!important}`}</style>
+      <div ref={mapRef} style={{ width: '100%', height: 340, borderRadius: 12, overflow: 'hidden', border: '1px solid #e5e7eb' }} />
+      <style>{`.maplibregl-ctrl-attrib{font-size:9px!important}.maplibregl-ctrl-group{border-radius:8px!important;overflow:hidden}`}</style>
     </div>
   );
 }
 
-// ─── SectionHead ─────────────────────────────────────────────────────
+// ─── Nav links ───────────────────────────────────────────────────────
 
-function SectionHead({ index, title, subtitle, nodeId }: { index: string; title: string; subtitle: string; nodeId: string }) {
-  return (
-    <header className="sect-head">
-      <div className="sect-mini"><Pyramid3D size={56} active={nodeId} /></div>
-      <div className="sect-meta">
-        <div className="sect-row"><span className="sect-index">v_{index}</span><h2 className="sect-title">{title}</h2></div>
-        <span className="sect-sub">/ {subtitle}</span>
-      </div>
-    </header>
-  );
-}
+const NAV_LINKS = [
+  { label: 'Experience', href: '#experience' },
+  { label: 'Projects',   href: '#projects' },
+  { label: 'Skills',     href: '#skills' },
+  { label: 'Writing',    href: '#writing' },
+  { label: 'Contact',    href: '#contact' },
+];
 
 // ─── Page ─────────────────────────────────────────────────────────────
 
 type ExpTab = 'work' | 'involvement' | 'programs';
-const EXP_TAB_SUBTITLE: Record<ExpTab, string> = { work: 'longest path', involvement: 'connected components', programs: 'covering set' };
 const EXP_TAB_ORDER: ExpTab[] = ['work', 'involvement', 'programs'];
 
 export default function Home() {
-  const [pyramidMode, setPyramidMode] = useState<PyramidMode>('loading');
-  const [overlayFading, setOverlayFading] = useState(false);
-  const [showOverlay, setShowOverlay] = useState(true);
-  const [activeSection, setActiveSection] = useState<string>('intro');
   const [expTab, setExpTab] = useState<ExpTab>('work');
   const expIdx = EXP_TAB_ORDER.indexOf(expTab);
   const expViewportRef = useRef<HTMLDivElement>(null);
@@ -297,230 +243,201 @@ export default function Home() {
       if (!panel || !viewport) return;
       viewport.style.height = `${panel.offsetHeight}px`;
     };
-    measure(); window.addEventListener('resize', measure);
+    measure();
+    window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
   }, [expIdx]);
 
-  useEffect(() => {
-    let buildTimer: number | undefined, fadeTimer: number | undefined, removeTimer: number | undefined;
-    let isReturning = false;
-    try { isReturning = !!localStorage.getItem(VISIT_KEY); } catch {}
-    if (isReturning) { setPyramidMode('docked'); setShowOverlay(false); }
-    else {
-      buildTimer = window.setTimeout(() => { setPyramidMode('docked'); setOverlayFading(true); }, 2800);
-      fadeTimer = window.setTimeout(() => { try { localStorage.setItem(VISIT_KEY, '1'); } catch {} }, 3100);
-      removeTimer = window.setTimeout(() => setShowOverlay(false), 3600);
-    }
-    return () => { if (buildTimer) clearTimeout(buildTimer); if (fadeTimer) clearTimeout(fadeTimer); if (removeTimer) clearTimeout(removeTimer); };
+  const scrollTo = useCallback((href: string) => {
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) { const id = entry.target.id === 'last-visitor' ? 'visitor' : entry.target.id; setActiveSection(id); } });
-    }, { rootMargin: '-40% 0px -55% 0px' });
-    ['intro', 'experience', 'technologies', 'projects', 'writing', 'last-visitor', 'contact'].forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
-    return () => observer.disconnect();
-  }, []);
-
-  const jumpTo = useCallback((id: string) => {
-    const node = NODES.find(n => n.id === id); if (!node) return;
-    const el = document.querySelector(node.section); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
-
-  const handleNodeClick = useCallback((id: string) => { jumpTo(id); setPyramidMode('docked'); }, [jumpTo]);
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{--bg:oklch(0.11 0.008 255);--bg2:oklch(0.15 0.008 255);--border:oklch(0.22 0.008 255);--muted:oklch(0.52 0.008 255);--text:oklch(0.90 0.006 255);--accent:oklch(0.78 0.13 80);--max:720px;--serif:'EB Garamond',Georgia,serif;--mono:'DM Mono',monospace}
+        :root{
+          --bg:#ffffff;
+          --bg2:#f9fafb;
+          --border:#e5e7eb;
+          --muted:#6b7280;
+          --text:#111827;
+          --accent:#2563eb;
+          --accent-light:#eff6ff;
+          --max:760px;
+          --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+        }
         html{scroll-behavior:smooth;background:var(--bg)}
-        body{background:var(--bg);color:var(--text);font-family:var(--serif);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
-        .pyramid{display:block;overflow:visible}
-        .pyramid-edge{fill:none;stroke-width:1.2;transition:stroke-opacity 0.3s}
-        .pyramid-edge-front{stroke:oklch(0.40 0.008 255)}
-        .pyramid-edge-back{stroke:oklch(0.30 0.008 255);stroke-dasharray:2 2;opacity:0.7}
-        .pyramid-edge-connector{stroke:oklch(0.34 0.008 255)}
-        .pyramid-node-group{transform:translate(var(--tx),var(--ty));transition:transform 0s}
-        .pyramid-node{fill:var(--muted);transition:fill 0.2s,r 0.2s}
-        .pyramid-node-group.is-front .pyramid-node{fill:oklch(0.78 0.006 255)}
-        .pyramid-node-group.is-back .pyramid-node{fill:oklch(0.55 0.006 255)}
-        .pyramid-node-group.is-active .pyramid-node{fill:var(--accent);r:5.5}
-        .pyramid-node-group.is-interactive .pyramid-node-hit{fill:transparent;cursor:pointer}
-        .pyramid-node-group.is-interactive:hover .pyramid-node{fill:var(--text)}
-        .pyramid-label{font-family:var(--mono);font-size:9px;fill:var(--muted);letter-spacing:0.04em;pointer-events:none;transition:opacity 0.3s,fill 0.2s}
-        .pyramid-node-group.is-active .pyramid-label{fill:var(--text)}
-        .pyramid.is-building .pyramid-node-group{animation:pyramidNodeIn 900ms cubic-bezier(0.16,1,0.3,1) backwards;animation-delay:calc(var(--ni)*60ms + 100ms)}
-        .pyramid.is-building .pyramid-edge{animation:pyramidEdgeIn 600ms ease-out backwards;animation-delay:calc(var(--ei)*35ms + 1100ms)}
-        .pyramid.is-building .pyramid-label{animation:pyramidLabelIn 500ms ease-out backwards;animation-delay:1900ms}
-        @keyframes pyramidNodeIn{0%{opacity:0;transform:translate(0px,0px) scale(0.6)}40%{opacity:1}100%{opacity:1;transform:translate(var(--tx),var(--ty)) scale(1)}}
-        @keyframes pyramidEdgeIn{from{stroke-dasharray:1;stroke-dashoffset:1}to{stroke-dasharray:1;stroke-dashoffset:0}}
-        @keyframes pyramidLabelIn{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:translateY(0)}}
-        .pyramid-nav{position:fixed;top:18px;right:18px;width:280px;height:280px;z-index:60;transform-origin:top right;transition:transform 760ms cubic-bezier(0.16,1,0.3,1);will-change:transform}
-        .pyramid-nav.is-loading{transform:translate(calc(-50vw + 158px),calc(50vh - 158px)) scale(1);z-index:1001}
-        .pyramid-nav.is-docked{transform:scale(0.26);cursor:pointer}
-        .pyramid-nav.is-docked:hover,.pyramid-nav.is-docked:focus-visible{outline:none;transform:scale(0.30)}
-        .pyramid-nav.is-expanded{transform:scale(0.82)}
-        .pyramid-nav .pyramid-label{opacity:1}
-        .pyramid-nav.is-docked .pyramid-label{opacity:0}
-        .pyramid-nav-hint{position:absolute;right:0;top:-22px;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.1em;opacity:0;transform:scale(3.5);transform-origin:top right;pointer-events:none;transition:opacity 0.2s}
-        .pyramid-nav.is-docked .pyramid-nav-hint{opacity:0.8}
-        .loader-bg{position:fixed;inset:0;z-index:1000;background:var(--bg);display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity 700ms ease}
-        .loader-bg.is-fading{opacity:0;pointer-events:none}
-        html.returning .loader-bg{display:none}
-        html.returning .pyramid.is-building .pyramid-node-group,html.returning .pyramid.is-building .pyramid-edge,html.returning .pyramid.is-building .pyramid-label{animation:none!important}
-        html.returning .pyramid-nav.is-loading{transform:scale(0.26);cursor:pointer}
-        html.returning .pyramid-nav.is-loading:hover{transform:scale(0.30)}
-        html.returning .pyramid-nav.is-loading .pyramid-label{opacity:0}
-        html.returning .pyramid-nav.is-loading .pyramid-node-group{transform:translate(var(--tx),var(--ty));opacity:1}
-        html.returning .pyramid-nav.is-loading .pyramid-edge{stroke-dashoffset:0}
-        .loader-stats{position:absolute;bottom:18%;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.08em;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-        .loader-stats span{opacity:0;animation:fadeUp 500ms ease-out forwards}
-        .loader-stats .ls-1{animation-delay:2200ms}
-        .loader-stats .ls-2{animation-delay:2350ms;color:var(--text)}
-        .loader-stats .ls-3{animation-delay:2500ms;color:var(--text)}
-        .loader-stats .ls-4{animation-delay:2650ms;font-style:italic;font-family:var(--serif);letter-spacing:0.02em}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
-        nav{position:sticky;top:0;z-index:50;background:oklch(0.11 0.008 255 / 0.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 24px}
-        .nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:var(--max);margin:0 auto;height:56px;gap:24px}
-        .nav-brand{display:flex;align-items:baseline;gap:10px;color:var(--text);text-decoration:none}
-        .nav-brand .nav-name{font-size:14px;font-weight:500;font-family:var(--serif)}
-        .nav-brand .nav-handle{font-size:11px;color:var(--muted);font-family:var(--mono)}
-        .nav-current{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:0.08em;text-align:right}
-        main{max-width:var(--max);margin:0 auto;padding:0 24px 120px}
-        section{padding-top:88px;scroll-margin-top:64px}
-        .hero{padding-top:64px}
-        .hero h1{font-size:32px;font-weight:400;letter-spacing:-0.01em;margin-bottom:6px}
-        .hero .role{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.08em;margin-bottom:32px}
-        .hero .role b{color:var(--text);font-weight:500}
-        .hero-epigraph{font-style:italic;font-size:14px;color:oklch(0.62 0.006 255);border-left:1px solid var(--border);padding:6px 0 6px 14px;margin-bottom:32px}
-        .hero-epigraph .attr{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--muted);display:block;margin-top:6px;letter-spacing:0.04em}
-        .hero p.lede{color:oklch(0.76 0.006 255);font-size:15.5px;margin-bottom:16px}
-        .hero p.lede strong{color:var(--text);font-weight:500}
-        .hero .cta{display:inline-block;margin-top:24px;padding:9px 22px;font-size:13px;font-family:var(--mono);color:var(--text);border:1px solid var(--border);border-radius:6px;text-decoration:none;letter-spacing:0.04em;transition:border-color 0.15s,background 0.15s}
-        .hero .cta:hover{border-color:var(--text);background:var(--bg2)}
-        .sect-head{display:flex;align-items:center;gap:16px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border)}
-        .sect-mini{flex-shrink:0;width:56px;height:56px;opacity:0.9}
-        .sect-mini .pyramid-label{display:none}
-        .sect-meta{display:flex;flex-direction:column;gap:2px;flex:1}
-        .sect-row{display:flex;align-items:baseline;gap:12px}
-        .sect-index{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.06em}
-        .sect-title{font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--text);font-family:var(--mono)}
-        .sect-sub{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--muted)}
-        .adj-list{display:flex;flex-direction:column}
-        .adj-row{display:grid;grid-template-columns:44px 18px 1fr;gap:0 14px;padding:18px 0;border-bottom:1px solid var(--border);align-items:center}
-        .adj-row:first-child{border-top:1px solid var(--border)}
-        .adj-logo{width:36px;height:36px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center}
-        .adj-logo-placeholder{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.04em}
-        .adj-arrow{font-family:var(--mono);color:oklch(0.40 0.008 255);font-size:13px;text-align:center}
-        .adj-body{display:flex;flex-direction:column;gap:1px}
-        .adj-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-        .adj-name{font-size:14px;font-weight:500;color:var(--text)}
-        .adj-year{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
-        .adj-role{font-size:13px;color:oklch(0.66 0.006 255)}
-        .tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
-        .tab{padding:7px 14px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:999px;cursor:pointer;background:transparent;transition:color 0.15s,border-color 0.15s,background 0.15s}
-        .tab:hover{color:var(--text);border-color:oklch(0.36 0.008 255)}
-        .tab.is-active{color:var(--text);border-color:var(--accent);background:oklch(0.16 0.008 255)}
-        .carousel{overflow:hidden;transition:height 360ms cubic-bezier(0.32,0.72,0.34,1.0)}
-        .carousel-track{display:flex;align-items:flex-start;transition:transform 380ms cubic-bezier(0.32,0.72,0.34,1.0);will-change:transform}
-        .carousel-panel{flex:0 0 100%;min-width:100%;opacity:1;transition:opacity 240ms ease}
-        .carousel-panel[aria-hidden="true"]{opacity:0.35}
-        .tech-list{display:flex;flex-direction:column;gap:20px}
-        .tech-cat{padding-bottom:18px;border-bottom:1px solid var(--border)}
-        .tech-cat:last-child{border-bottom:none;padding-bottom:0}
-        .tech-cat-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
-        .tech-cat-name{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--text);text-transform:uppercase}
-        .tech-cat-count{font-family:var(--mono);font-size:10px;color:var(--muted)}
-        .tech-cat-items{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.02em;line-height:1.85}
-        .tech-cat-items .br{color:oklch(0.40 0.008 255)}
-        .tech-cat-items .tag{color:oklch(0.72 0.006 255)}
-        .tech-cat-items .tag+.tag::before{content:', ';color:oklch(0.40 0.008 255)}
-        .proj-list{display:flex;flex-direction:column}
-        .proj-row{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:18px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:background 0.15s}
-        .proj-row:first-child{border-top:1px solid var(--border)}
-        .proj-row:hover{background:oklch(0.13 0.008 255)}
-        .proj-row:hover .proj-name{color:var(--text)}
-        .proj-id{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.04em;padding-top:4px}
-        .proj-body{display:flex;flex-direction:column;gap:6px}
-        .proj-headline{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-        .proj-name{font-size:14.5px;font-weight:500;color:oklch(0.84 0.006 255);transition:color 0.12s}
-        .proj-arr{font-family:var(--mono);font-size:12px;color:var(--muted)}
-        .proj-desc{font-size:13.5px;color:var(--muted);line-height:1.6}
-        .proj-tags{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.02em;margin-top:2px}
-        .proj-tags .br{color:oklch(0.40 0.008 255)}
-        .proj-tags .tag{color:oklch(0.65 0.006 255)}
-        .proj-tags .tag+.tag::before{content:', ';color:oklch(0.40 0.008 255)}
-        details.post{border-bottom:1px solid var(--border);padding:16px 0}
+        body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+        /* Nav */
+        nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+        .nav-inner{display:flex;align-items:center;justify-content:space-between;max-width:var(--max);margin:0 auto;height:58px;padding:0 24px;gap:16px}
+        .nav-brand{font-size:15px;font-weight:600;color:var(--text);text-decoration:none}
+        .nav-links{display:flex;gap:6px}
+        .nav-link{font-size:13px;color:var(--muted);text-decoration:none;padding:5px 10px;border-radius:6px;transition:color 0.15s,background 0.15s;background:transparent;border:none;cursor:pointer;font-family:var(--font)}
+        .nav-link:hover{color:var(--text);background:var(--bg2)}
+
+        /* Layout */
+        main{max-width:var(--max);margin:0 auto;padding:0 24px 100px}
+        section{padding-top:80px;scroll-margin-top:72px}
+
+        /* Hero */
+        .hero{padding-top:72px;padding-bottom:16px}
+        .hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:4px 10px;border-radius:999px;margin-bottom:20px;letter-spacing:0.02em}
+        .hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+        .hero h1{font-size:40px;font-weight:700;letter-spacing:-0.03em;line-height:1.15;margin-bottom:8px;color:var(--text)}
+        .hero-sub{font-size:17px;color:var(--muted);font-weight:400;margin-bottom:20px}
+        .hero-bio{font-size:15px;color:#374151;line-height:1.75;max-width:600px;margin-bottom:28px}
+        .hero-bio strong{color:var(--text);font-weight:600}
+        .hero-ctas{display:flex;gap:10px;flex-wrap:wrap}
+        .btn-primary{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;font-size:14px;font-weight:500;background:var(--text);color:#fff;border-radius:8px;text-decoration:none;transition:background 0.15s;border:none;cursor:pointer;font-family:var(--font)}
+        .btn-primary:hover{background:#374151}
+        .btn-secondary{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;font-size:14px;font-weight:500;color:var(--text);border:1px solid var(--border);background:transparent;border-radius:8px;text-decoration:none;transition:border-color 0.15s,background 0.15s;cursor:pointer;font-family:var(--font)}
+        .btn-secondary:hover{background:var(--bg2);border-color:#d1d5db}
+
+        /* Section titles */
+        .sec-title{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.02em;margin-bottom:24px}
+
+        /* Experience tabs */
+        .tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg2);padding:4px;border-radius:10px;width:fit-content}
+        .tab{padding:6px 16px;font-size:13px;font-weight:500;color:var(--muted);border:none;border-radius:7px;cursor:pointer;background:transparent;transition:color 0.15s,background 0.15s,box-shadow 0.15s;font-family:var(--font)}
+        .tab:hover{color:var(--text)}
+        .tab.is-active{color:var(--text);background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.10)}
+
+        /* Carousel */
+        .carousel{overflow:hidden;transition:height 340ms cubic-bezier(0.32,0.72,0.34,1)}
+        .carousel-track{display:flex;transition:transform 360ms cubic-bezier(0.32,0.72,0.34,1);will-change:transform}
+        .carousel-panel{flex:0 0 100%;min-width:100%;transition:opacity 220ms ease}
+        .carousel-panel[aria-hidden="true"]{opacity:0.3}
+
+        /* Experience rows */
+        .exp-list{display:flex;flex-direction:column}
+        .exp-row{display:flex;align-items:center;gap:16px;padding:20px 0;border-bottom:1px solid var(--border)}
+        .exp-row:first-child{border-top:1px solid var(--border)}
+        .exp-icon{width:80px;height:80px;border-radius:18px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:800;color:#fff;letter-spacing:0.01em;font-size:clamp(11px,2.5vw,15px);line-height:1;text-align:center;padding:4px;word-break:break-all;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.10)}
+        .exp-icon img{width:100%;height:100%;object-fit:contain;padding:12px;border-radius:0}
+        .exp-arrow{font-size:15px;color:#d1d5db;flex-shrink:0}
+        .exp-body{flex:1;min-width:0}
+        .exp-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+        .exp-name{font-size:15px;font-weight:600;color:var(--text)}
+        .exp-year{font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+        .exp-role{font-size:13px;color:var(--muted);margin-top:3px}
+        .exp-desc{margin-top:8px;display:flex;flex-direction:column;gap:4px;list-style:none;padding:0}
+        .exp-desc li{font-size:12.5px;color:#4b5563;line-height:1.6;padding-left:14px;position:relative}
+        .exp-desc li::before{content:'·';position:absolute;left:2px;color:#9ca3af;font-weight:700;font-size:16px;line-height:1.3}
+
+        /* Skills */
+        .skills-grid{display:flex;flex-direction:column;gap:18px}
+        .skill-group{}
+        .skill-group-name{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+        .skill-tags{display:flex;flex-wrap:wrap;gap:6px}
+        .skill-tag{font-size:13px;color:#374151;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-weight:400}
+
+        /* Projects */
+        .proj-grid{display:flex;flex-direction:column;gap:16px}
+        .proj-card{border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:inherit;transition:border-color 0.15s,box-shadow 0.15s;display:block}
+        .proj-card:hover{border-color:#9ca3af;box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+        .proj-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+        .proj-name{font-size:15px;font-weight:600;color:var(--text)}
+        .proj-arrow{font-size:14px;color:var(--muted)}
+        .proj-desc{font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:12px}
+        .proj-tags{display:flex;flex-wrap:wrap;gap:6px}
+        .proj-tag{font-size:11px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:3px 8px;border-radius:5px}
+
+        /* Writing */
+        details.post{border-bottom:1px solid var(--border)}
         details.post:first-of-type{border-top:1px solid var(--border)}
-        details.post>summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+        details.post>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0}
         details.post>summary::-webkit-details-marker{display:none}
-        details.post .post-sum-left{display:flex;align-items:baseline;gap:12px}
-        details.post .post-marker{font-family:var(--mono);font-size:11px;color:var(--muted);transition:transform 0.2s;display:inline-block}
-        details.post[open] .post-marker{transform:rotate(90deg);color:var(--accent)}
-        details.post .post-title{font-size:14px;color:oklch(0.72 0.006 255);transition:color 0.12s;font-family:var(--serif)}
-        details.post:hover .post-title,details.post[open] .post-title{color:var(--text)}
-        details.post .post-date{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
-        details.post .post-content{padding:22px 0 8px}
-        details.post .post-hero{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--border);margin-bottom:22px;display:block}
-        details.post .post-content p{color:oklch(0.76 0.006 255);font-size:15px;line-height:1.8;margin-bottom:18px}
-        details.post .post-content p.lede{font-size:17px;color:var(--text);font-style:italic}
-        details.post .post-content p:last-child{margin-bottom:0}
+        .post-left{display:flex;align-items:center;gap:10px}
+        .post-chevron{font-size:11px;color:var(--muted);transition:transform 0.2s;display:inline-block}
+        details.post[open] .post-chevron{transform:rotate(90deg)}
+        .post-title{font-size:14px;font-weight:500;color:#374151}
+        details.post:hover .post-title{color:var(--text)}
+        .post-date{font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+        .post-body{padding:0 0 20px 22px}
+        .post-lede{font-size:15px;font-weight:500;color:var(--text);margin-bottom:12px;line-height:1.6}
+        .post-body p{font-size:14px;color:#374151;line-height:1.75;margin-bottom:12px}
+        .post-body p:last-child{margin-bottom:0}
+
+        /* Visitor */
+        .visitor-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px}
+
+        /* Contact */
         .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-        .contact-card{border:1px solid var(--border);border-radius:10px;padding:18px 20px;background:var(--bg2);text-decoration:none;color:inherit;transition:border-color 0.15s,background 0.15s;display:flex;flex-direction:column;gap:4px}
-        .contact-card:hover{border-color:var(--text);background:oklch(0.16 0.008 255)}
-        .contact-card .cc-label{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase}
-        .contact-card .cc-value{font-size:14px;color:var(--text)}
-        .contact-card .cc-arrow{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:6px}
-        .contact-intro{color:oklch(0.76 0.006 255);font-size:15px;margin-bottom:20px}
-        footer{max-width:var(--max);margin:0 auto;padding:32px 24px 48px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px}
+        .contact-card{border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:#fff;text-decoration:none;color:inherit;transition:border-color 0.15s,box-shadow 0.15s;display:flex;flex-direction:column;gap:3px}
+        .contact-card:hover{border-color:#9ca3af;box-shadow:0 2px 8px rgba(0,0,0,0.07)}
+        .cc-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em}
+        .cc-value{font-size:14px;color:var(--text);font-weight:500}
+        .cc-arrow{font-size:12px;color:var(--muted);margin-top:4px}
+
+        /* Footer */
+        footer{max-width:var(--max);margin:0 auto;padding:28px 24px 40px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px}
         footer a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.15s}
         footer a:hover{color:var(--text)}
-        footer .copy{font-size:11px;color:oklch(0.38 0.008 255);font-family:var(--mono)}
-        footer .copy em{font-style:italic;font-family:var(--serif);color:oklch(0.48 0.008 255)}
-        @media(max-width:560px){.nav-current{display:none}.nav-inner{gap:14px}.hero h1{font-size:26px}.sect-head{gap:12px}.sect-mini{width:44px;height:44px}.pyramid-nav.is-expanded{transform:scale(0.62)}.contact-grid{grid-template-columns:1fr}footer{flex-direction:column;gap:16px}}
+        .footer-copy{font-size:12px;color:#9ca3af}
+
+        @media(max-width:580px){
+          .hero h1{font-size:30px}
+          .nav-links{display:none}
+          .contact-grid{grid-template-columns:1fr}
+          footer{flex-direction:column;gap:12px}
+        }
       `}</style>
 
-      {showOverlay && <LoadingOverlay fading={overlayFading} />}
-
-      <PyramidNav mode={pyramidMode} active={activeSection} onExpand={() => setPyramidMode('expanded')} onCollapse={() => setPyramidMode('docked')} onNodeClick={handleNodeClick} />
-
+      {/* ── Nav ── */}
       <nav>
         <div className="nav-inner">
-          <a className="nav-brand" href="#intro" onClick={() => jumpTo('intro')}>
-            <span className="nav-name">Abdifataah Abdi</span>
-            <span className="nav-handle">@abdifataabdi</span>
-          </a>
-          <span className="nav-current">{(NODES.find(n => n.id === activeSection)?.full ?? '').toLowerCase()}</span>
+          <a className="nav-brand" href="#top">Abdifatah Abdi</a>
+          <div className="nav-links">
+            {NAV_LINKS.map(l => (
+              <button key={l.href} className="nav-link" onClick={() => scrollTo(l.href)}>{l.label}</button>
+            ))}
+          </div>
         </div>
       </nav>
 
-      <main>
-        <section id="intro" className="hero">
-          <h1>Abdifataah Abdi</h1>
-          {/* TODO: Update with your school/major/focus */}
-          <p className="role">Software Engineer  ·  <b>W₆ = (V, E)</b>  ·  |V|=7, |E|=12</p>
+      <main id="top">
 
-          <div className="hero-epigraph">
-            {/* TODO: Replace with a quote that resonates with you */}
-            The only way to do great work is to love what you do.
-            <span className="attr">— Steve Jobs</span>
+        {/* ── Hero ── */}
+        <section className="hero" id="about">
+          <div className="hero-tag"><span className="dot" />Open to opportunities</div>
+          <h1>Abdifatah Abdi</h1>
+          <p className="hero-sub">Software Engineer &amp; Data Science · UW–Madison</p>
+
+          <p className="hero-bio">
+            Welcome. I&apos;m Abdifatah. I am a first-generation Somali-American who was born in Somalia and grew up in Milwaukee, Wisconsin.
+          </p>
+          <p className="hero-bio">
+            I have always been interested in technology and engineering a better world. Growing up, I watched how access to the right tools and information could change someone&apos;s life entirely. That is what drove me into Computer Science — and after research internships and building real products, I knew this was exactly where I was meant to be.
+          </p>
+          <p className="hero-bio">
+            I am passionate about Social Innovation, Entrepreneurship, and International Travel. I am an Arsenal and Denver Nuggets fan.
+          </p>
+          <p className="hero-bio">
+            Currently studying <strong>Computer Science and Data Science</strong> at the <strong>University of Wisconsin–Madison</strong>, graduating December 2025.
+          </p>
+          <p className="hero-bio">
+            I am always excited to connect — feel free to reach out.
+          </p>
+          <div className="hero-ctas">
+            <button data-cal-link="abdifatah-abdi-l3cc0s" data-cal-config='{"layout":"month_view"}' className="btn-primary">
+              Get in touch →
+            </button>
+            <a href="https://github.com/Abdifatah2002" target="_blank" rel="noopener" className="btn-secondary">GitHub</a>
+            <a href="https://www.linkedin.com/in/abdifatah-abdi-ab5723197/" target="_blank" rel="noopener" className="btn-secondary">LinkedIn</a>
           </div>
-
-          {/* TODO: Replace with your real bio */}
-          <p className="lede">Welcome. I&apos;m <strong>Abdifataah Abdi</strong>, a software engineer passionate about building things that matter.</p>
-          <p className="lede">Currently studying at <strong>[Your University]</strong>, majoring in <strong>[Your Major]</strong>. Interested in [your interests].</p>
-          <p className="lede">Feel free to look around and reach out — I&apos;m always happy to connect. <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--muted)' }}>(↗ pyramid on the right)</span></p>
-
-          <a href="mailto:abdiabdifatah102@gmail.com" className="cta">Get in touch →</a>
         </section>
 
+        {/* ── Experience ── */}
         <section id="experience">
-          <SectionHead index="1" title="Experience" subtitle={EXP_TAB_SUBTITLE[expTab]} nodeId="experience" />
-          <div className="tabs" role="tablist" aria-label="Experience type">
+          <h2 className="sec-title">Experience</h2>
+          <div className="tabs">
             {(['work', 'involvement', 'programs'] as const).map(t => (
-              <button key={t} role="tab" aria-selected={expTab === t} className={`tab ${expTab === t ? 'is-active' : ''}`} onClick={() => setExpTab(t)}>
+              <button key={t} className={`tab ${expTab === t ? 'is-active' : ''}`} onClick={() => setExpTab(t)}>
                 {t === 'work' ? 'Work' : t === 'involvement' ? 'Involvement' : 'Programs'}
               </button>
             ))}
@@ -528,42 +445,45 @@ export default function Home() {
           <div ref={expViewportRef} className="carousel">
             <div className="carousel-track" style={{ transform: `translateX(-${expIdx * 100}%)` }}>
               <div ref={el => { expPanelRefs.current[0] = el; }} className="carousel-panel" aria-hidden={expTab !== 'work'}>
-                <div className="adj-list">
+                <div className="exp-list">
                   {experience.map((e, i) => (
-                    <div key={i} className="adj-row">
-                      <div className="adj-logo"><span className="adj-logo-placeholder">co</span></div>
-                      <span className="adj-arrow">→</span>
-                      <div className="adj-body">
-                        <div className="adj-head"><span className="adj-name">{e.name}</span><span className="adj-year">{e.year}</span></div>
-                        <span className="adj-role">{e.role}</span>
+                    <div key={i} className="exp-row">
+                      <ExpIcon initials={e.initials} name={e.name} logo={e.logo} bg={e.bg} fg={e.fg} />
+                      <span className="exp-arrow">→</span>
+                      <div className="exp-body">
+                        <div className="exp-top"><span className="exp-name">{e.name}</span><span className="exp-year">{e.year}</span></div>
+                        <div className="exp-role">{e.role}</div>
+                        {e.desc && <ul className="exp-desc">{e.desc.map((d, j) => <li key={j}>{d}</li>)}</ul>}
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
               <div ref={el => { expPanelRefs.current[1] = el; }} className="carousel-panel" aria-hidden={expTab !== 'involvement'}>
-                <div className="adj-list">
+                <div className="exp-list">
                   {involvement.map((e, i) => (
-                    <div key={i} className="adj-row">
-                      <div className="adj-logo"><span className="adj-logo-placeholder">org</span></div>
-                      <span className="adj-arrow">→</span>
-                      <div className="adj-body">
-                        <div className="adj-head"><span className="adj-name">{e.name}</span><span className="adj-year">{e.year}</span></div>
-                        <span className="adj-role">{e.role}</span>
+                    <div key={i} className="exp-row">
+                      <ExpIcon initials={e.initials} name={e.name} logo={e.logo} bg={e.bg} fg={e.fg} />
+                      <span className="exp-arrow">→</span>
+                      <div className="exp-body">
+                        <div className="exp-top"><span className="exp-name">{e.name}</span><span className="exp-year">{e.year}</span></div>
+                        <div className="exp-role">{e.role}</div>
+                        {e.desc && <ul className="exp-desc">{e.desc.map((d, j) => <li key={j}>{d}</li>)}</ul>}
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
               <div ref={el => { expPanelRefs.current[2] = el; }} className="carousel-panel" aria-hidden={expTab !== 'programs'}>
-                <div className="adj-list">
+                <div className="exp-list">
                   {programs.map((e, i) => (
-                    <div key={i} className="adj-row">
-                      <div className="adj-logo"><span className="adj-logo-placeholder">pgm</span></div>
-                      <span className="adj-arrow">→</span>
-                      <div className="adj-body">
-                        <div className="adj-head"><span className="adj-name">{e.program}</span><span className="adj-year">{e.year.split(' ').pop()}</span></div>
-                        <span className="adj-role">{e.name}</span>
+                    <div key={i} className="exp-row">
+                      <ExpIcon initials={e.initials} name={e.name} logo={e.logo} bg={e.bg} fg={e.fg} />
+                      <span className="exp-arrow">→</span>
+                      <div className="exp-body">
+                        <div className="exp-top"><span className="exp-name">{e.program}</span><span className="exp-year">{e.year}</span></div>
+                        <div className="exp-role">{e.name}</div>
+                        {e.desc && <ul className="exp-desc">{e.desc.map((d, j) => <li key={j}>{d}</li>)}</ul>}
                       </div>
                     </div>
                   ))}
@@ -573,104 +493,105 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="technologies">
-          <SectionHead index="2" title="Technologies" subtitle="working set" nodeId="technologies" />
-          <div className="tech-list">
-            {techCategories.map(cat => (
-              <div key={cat.name} className="tech-cat">
-                <div className="tech-cat-head"><span className="tech-cat-name">{cat.name}</span><span className="tech-cat-count">{cat.items.length}</span></div>
-                <div className="tech-cat-items">
-                  <span className="br">{'{ '}</span>
-                  {cat.items.map(t => <span key={t} className="tag">{t}</span>)}
-                  <span className="br">{' }'}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
+        {/* ── Projects ── */}
         <section id="projects">
-          <SectionHead index="3" title="Projects" subtitle="adjacency list" nodeId="projects" />
-          <div className="proj-list">
+          <h2 className="sec-title">Projects</h2>
+          <div className="proj-grid">
             {projects.map((p, i) => (
-              <a key={i} className="proj-row" href={p.link || '#'} target={p.link ? '_blank' : '_self'} rel="noopener">
-                <span className="proj-id">p_{String(i + 1).padStart(2, '0')}</span>
-                <div className="proj-body">
-                  <div className="proj-headline"><span className="proj-name">{p.name}</span><span className="proj-arr">↗</span></div>
-                  <div className="proj-desc">{p.desc}</div>
-                  <div className="proj-tags">
-                    <span className="br">{'{ '}</span>
-                    {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                    <span className="br">{' }'}</span>
-                  </div>
+              <a key={i} className="proj-card" href={p.link} target="_blank" rel="noopener">
+                <div className="proj-header">
+                  <span className="proj-name">{p.name}</span>
+                  <span className="proj-arrow">↗</span>
+                </div>
+                <p className="proj-desc">{p.desc}</p>
+                <div className="proj-tags">
+                  {p.tags.map(t => <span key={t} className="proj-tag">{t}</span>)}
                 </div>
               </a>
             ))}
           </div>
         </section>
 
-        <section id="writing">
-          <SectionHead index="4" title="Writing" subtitle="leaf nodes" nodeId="writing" />
-          <div>
-            {posts.map((post, i) => (
-              <details key={i} className="post">
-                <summary>
-                  <span className="post-sum-left"><span className="post-marker">▸</span><span className="post-title">{post.title}</span></span>
-                  <span className="post-date">{post.date}</span>
-                </summary>
-                <div className="post-content">
-                  {post.hero && <img className="post-hero" src={post.hero} alt={post.title} />}
-                  {post.lede && <p className="lede">{post.lede}</p>}
-                  {post.paragraphs.map((para, j) => <p key={j}>{para}</p>)}
+        {/* ── Skills ── */}
+        <section id="skills">
+          <h2 className="sec-title">Skills</h2>
+          <div className="skills-grid">
+            {techCategories.map(cat => (
+              <div key={cat.name} className="skill-group">
+                <div className="skill-group-name">{cat.name}</div>
+                <div className="skill-tags">
+                  {cat.items.map(t => <span key={t} className="skill-tag">{t}</span>)}
                 </div>
-              </details>
+              </div>
             ))}
           </div>
         </section>
 
-        <section id="last-visitor">
-          <SectionHead index="5" title="Last Visitor" subtitle="neighborhood N(v)" nodeId="visitor" />
-          <VisitorMap />
+        {/* ── Writing ── */}
+        <section id="writing">
+          <h2 className="sec-title">Writing</h2>
+          {posts.map((post, i) => (
+            <details key={i} className="post">
+              <summary>
+                <div className="post-left">
+                  <span className="post-chevron">▶</span>
+                  <span className="post-title">{post.title}</span>
+                </div>
+                <span className="post-date">{post.date}</span>
+              </summary>
+              <div className="post-body">
+                {post.lede && <p className="post-lede">{post.lede}</p>}
+                {post.paragraphs.map((p, j) => <p key={j}>{p}</p>)}
+              </div>
+            </details>
+          ))}
         </section>
 
+        {/* ── Visitor Map ── */}
+        <section id="visitor">
+          <h2 className="sec-title">Visitors</h2>
+          <div className="visitor-card">
+            <VisitorMap />
+          </div>
+        </section>
+
+        {/* ── Contact ── */}
         <section id="contact">
-          <SectionHead index="6" title="Contact" subtitle="incident edges" nodeId="contact" />
-          <p className="contact-intro">If anything here resonated, the easiest way to reach me is below. I read every message.</p>
+          <h2 className="sec-title">Contact</h2>
+          <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 20 }}>I&apos;m currently open to new opportunities. Feel free to reach out.</p>
           <div className="contact-grid">
             <a className="contact-card" href="mailto:abdiabdifatah102@gmail.com">
               <span className="cc-label">Email</span>
               <span className="cc-value">abdiabdifatah102@gmail.com</span>
-              <span className="cc-arrow">send a message →</span>
+              <span className="cc-arrow">Send a message →</span>
+            </a>
+            <a className="contact-card" href="https://www.linkedin.com/in/abdifatah-abdi-ab5723197/" target="_blank" rel="noopener">
+              <span className="cc-label">LinkedIn</span>
+              <span className="cc-value">AbdifatahAbdi</span>
+              <span className="cc-arrow">Connect →</span>
             </a>
             <a className="contact-card" href="https://github.com/Abdifatah2002" target="_blank" rel="noopener">
               <span className="cc-label">GitHub</span>
               <span className="cc-value">Abdifatah2002</span>
-              <span className="cc-arrow">code →</span>
+              <span className="cc-arrow">See my code →</span>
             </a>
-            {/* TODO: Replace # with your real LinkedIn URL */}
-            <a className="contact-card" href="#" target="_blank" rel="noopener">
-              <span className="cc-label">LinkedIn</span>
-              <span className="cc-value">[your-linkedin]</span>
-              <span className="cc-arrow">connect →</span>
-            </a>
-            {/* TODO: Replace # with your X/Twitter URL, or remove this card */}
-            <a className="contact-card" href="#" target="_blank" rel="noopener">
-              <span className="cc-label">X / Twitter</span>
-              <span className="cc-value">@[your-handle]</span>
-              <span className="cc-arrow">read →</span>
+            <a className="contact-card" href="tel:+12624671001">
+              <span className="cc-label">Phone</span>
+              <span className="cc-value">(262) 467-1001</span>
+              <span className="cc-arrow">Call or text →</span>
             </a>
           </div>
         </section>
+
       </main>
 
       <footer>
         <div style={{ display: 'flex', gap: 20 }}>
           <a href="https://github.com/Abdifatah2002" target="_blank" rel="noopener">GitHub</a>
-          {/* TODO: Add your LinkedIn and X links */}
-          <a href="#">LinkedIn</a>
-          <a href="#">X</a>
+          <a href="https://www.linkedin.com/in/abdifatah-abdi-ab5723197/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="mailto:abdiabdifatah102@gmail.com">Email</a>
         </div>
-        <span className="copy">2026 Abdifataah Abdi  ·  <em>still adding edges</em></span>
+        <span className="footer-copy">© 2025 Abdifatah Abdi</span>
       </footer>
     </>
   );
