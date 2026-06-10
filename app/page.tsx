@@ -164,35 +164,57 @@ function VisitorMap() {
     let map: any = null;
     async function init() {
       const KEY = 'portfolio_last_visitor_v2';
+      const SESS = 'portfolio_counted_v2';
       const getStored = () => { try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; } catch { return null; } };
-      const setStored = (d: StoredVisitor) => localStorage.setItem(KEY, JSON.stringify(d));
+      const setStored = (d: StoredVisitor) => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch {} };
       const stored = getStored();
       if (stored) setStatus({ city: stored.city, country: stored.country, ts: stored.ts, live: false });
-      try { const res = await fetch('/api/visit'); const { count: gc } = await res.json(); setCount(gc); } catch {}
-      const maplibregl = (await import('maplibre-gl')).default;
-      await import('maplibre-gl/dist/maplibre-gl.css');
-      const lat = stored?.lat ?? 43.07, lon = stored?.lon ?? -89.40;
-      map = new maplibregl.Map({
-        container: mapRef.current!,
-        style: { version: 8, sources: { osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap contributors' } }, layers: [{ id: 'osm', type: 'raster', source: 'osm', minzoom: 0, maxzoom: 19 }] },
-        center: [lon, lat], zoom: 4, interactive: true, attributionControl: { compact: true },
-      });
-      const addMarker = (lng: number, lt: number) => {
-        const el = document.createElement('div');
-        el.style.cssText = 'width:12px;height:12px;border-radius:50%;background:#2563eb;border:2px solid #fff;box-shadow:0 0 0 3px rgba(37,99,235,0.25)';
-        new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([lng, lt]).addTo(map);
-      };
-      if (stored) map.on('load', () => addMarker(lon, lat));
+
+      // Always count the visit once per session, regardless of geolocation success
       try {
-        const r = await fetch('https://ipapi.co/json/'); const d = await r.json();
-        if (d.latitude) {
-          const fresh = { city: d.city || d.region || 'Unknown', country: d.country_code || '??', lat: d.latitude, lon: d.longitude, ts: Date.now() };
-          setStored(fresh);
-          try { const res = await fetch('/api/visit', { method: 'POST' }); const { count: nc } = await res.json(); setCount(nc); } catch {}
-          setStatus({ ...fresh, live: true });
-          map.flyTo({ center: [fresh.lon, fresh.lat], zoom: 5, duration: stored ? 1200 : 0 });
-          map.once('idle', () => addMarker(fresh.lon, fresh.lat));
+        const alreadyCounted = sessionStorage.getItem(SESS);
+        if (!alreadyCounted) {
+          const res = await fetch('/api/visit', { method: 'POST' });
+          const { count: nc } = await res.json();
+          setCount(nc);
+          sessionStorage.setItem(SESS, '1');
+        } else {
+          const res = await fetch('/api/visit');
+          const { count: gc } = await res.json();
+          setCount(gc);
         }
+      } catch {}
+
+      // Init map — wrapped for Safari WebGL safety
+      try {
+        const maplibregl = (await import('maplibre-gl')).default;
+        await import('maplibre-gl/dist/maplibre-gl.css');
+        if (!mapRef.current) return;
+        const lat = stored?.lat ?? 43.07, lon = stored?.lon ?? -89.40;
+        map = new maplibregl.Map({
+          container: mapRef.current,
+          style: { version: 8, sources: { osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap contributors' } }, layers: [{ id: 'osm', type: 'raster', source: 'osm', minzoom: 0, maxzoom: 19 }] },
+          center: [lon, lat], zoom: 4, interactive: true, attributionControl: { compact: true },
+        });
+        const addMarker = (lng: number, lt: number) => {
+          const el = document.createElement('div');
+          el.style.cssText = 'width:12px;height:12px;border-radius:50%;background:#2563eb;border:2px solid #fff;box-shadow:0 0 0 3px rgba(37,99,235,0.25)';
+          new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([lng, lt]).addTo(map);
+        };
+        if (stored) map.on('load', () => addMarker(lon, lat));
+
+        // Get fresh geolocation — separated from count so a blocked request doesn't stop counting
+        try {
+          const r = await fetch('https://ipapi.co/json/');
+          const d = await r.json();
+          if (d.latitude) {
+            const fresh = { city: d.city || d.region || 'Unknown', country: d.country_code || '??', lat: d.latitude, lon: d.longitude, ts: Date.now() };
+            setStored(fresh);
+            setStatus({ ...fresh, live: true });
+            map.flyTo({ center: [fresh.lon, fresh.lat], zoom: 5, duration: stored ? 1200 : 0 });
+            map.once('idle', () => addMarker(fresh.lon, fresh.lat));
+          }
+        } catch {}
       } catch {}
     }
     init();
