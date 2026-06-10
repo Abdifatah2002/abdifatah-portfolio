@@ -174,7 +174,7 @@ function VisitorMap() {
       const lat = stored?.lat ?? 43.07, lon = stored?.lon ?? -89.40;
       map = new maplibregl.Map({
         container: mapRef.current!,
-        style: { version: 8, sources: { carto: { type: 'raster', tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png'], tileSize: 256, attribution: '© CARTO © OpenStreetMap' } }, layers: [{ id: 'carto', type: 'raster', source: 'carto', minzoom: 0, maxzoom: 19 }] },
+        style: { version: 8, sources: { osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap contributors' } }, layers: [{ id: 'osm', type: 'raster', source: 'osm', minzoom: 0, maxzoom: 19 }] },
         center: [lon, lat], zoom: 4, interactive: true, attributionControl: { compact: true },
       });
       const addMarker = (lng: number, lt: number) => {
