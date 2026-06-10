@@ -308,8 +308,6 @@ export default function Home() {
 
         /* Hero */
         .hero{padding-top:72px;padding-bottom:16px}
-        .hero-tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--accent);background:var(--accent-light);padding:4px 10px;border-radius:999px;margin-bottom:20px;letter-spacing:0.02em}
-        .hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
         .hero h1{font-size:40px;font-weight:700;letter-spacing:-0.03em;line-height:1.15;margin-bottom:8px;color:var(--text)}
         .hero-sub{font-size:17px;color:var(--muted);font-weight:400;margin-bottom:20px}
         .hero-bio{font-size:15px;color:#374151;line-height:1.75;max-width:600px;margin-bottom:28px}
