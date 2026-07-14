@@ -434,7 +434,7 @@ export default function Home() {
           <p className="hero-sub">Software Engineer &amp; Data Science · UW–Madison</p>
 
           <p className="hero-bio">
-            Welcome. I&apos;m Abdifatah. I am a first-generation Somali-American who was born in Somalia and grew up in Milwaukee, Wisconsin.
+            Welcome to my portfolio site! I&apos;m Abdifatah, a <strong>Computer Science and Data Science</strong> graduate from the <strong>University of Wisconsin–Madison</strong>, excited to share my array of experiences and projects. They reflect both my academic growth and boundless enthusiasm for technology.
           </p>
           <p className="hero-bio">
             I have always been interested in technology and engineering a better world. Growing up, I watched how access to the right tools and information could change someone&apos;s life entirely. That is what drove me into Computer Science — and after research internships and building real products, I knew this was exactly where I was meant to be.
@@ -443,10 +443,7 @@ export default function Home() {
             I am passionate about Social Innovation, Entrepreneurship, and International Travel. I am an Arsenal and Lakers fan.
           </p>
           <p className="hero-bio">
-            I earned my degree in <strong>Computer Science and Data Science</strong> from the <strong>University of Wisconsin–Madison</strong> in December 2025.
-          </p>
-          <p className="hero-bio">
-            I am always excited to connect — feel free to reach out.
+            I am always excited to connect — enjoy your visit and let&apos;s stay in touch.
           </p>
           <div className="hero-ctas">
             <button data-cal-link="abdifatah-abdi-l3cc0s" data-cal-config='{"layout":"month_view"}' className="btn-primary">
