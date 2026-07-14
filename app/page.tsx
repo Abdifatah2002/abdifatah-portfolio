@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 
 // ─── Data ─────────────────────────────────────────────────────────────
 
@@ -129,11 +130,11 @@ function ExpIcon({ initials, name, logo, bg, fg }: { initials: string; name: str
     <div
       className="exp-icon"
       style={showImg
-        ? (isLocalSvg ? { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 } : { background: '#f3f4f6' })
+        ? (isLocalSvg ? { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0, position: 'relative' } : { background: '#f3f4f6', position: 'relative' })
         : { background: bg || 'var(--bg2)', color: fg || '#374151' }}
     >
       {showImg
-        ? <img src={logo} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 18 }} onError={() => setFailed(true)} />
+        ? <Image src={logo!} alt={name} fill unoptimized sizes="80px" style={{ objectFit: 'cover', borderRadius: 18 }} onError={() => setFailed(true)} />
         : initials}
     </div>
   );
@@ -185,36 +186,39 @@ function VisitorMap() {
         }
       } catch {}
 
+      // Get fresh geolocation — independent of map init so a blocked/slow map never leaves the UI stuck on "Locating…"
+      let fresh: StoredVisitor | null = null;
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 6000);
+        const r = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+        clearTimeout(timeout);
+        const d = await r.json();
+        if (d.latitude) {
+          fresh = { city: d.city || d.region || 'Unknown', country: d.country_code || '??', lat: d.latitude, lon: d.longitude, ts: Date.now() };
+          setStored(fresh);
+          setStatus({ ...fresh, live: true });
+        }
+      } catch {}
+      if (!fresh && !stored) setStatus({ city: 'Unknown', country: '', ts: Date.now(), live: false });
+
       // Init map — wrapped for Safari WebGL safety
       try {
         const maplibregl = (await import('maplibre-gl')).default;
         await import('maplibre-gl/dist/maplibre-gl.css');
         if (!mapRef.current) return;
-        const lat = stored?.lat ?? 43.07, lon = stored?.lon ?? -89.40;
+        const lat = fresh?.lat ?? stored?.lat ?? 43.07, lon = fresh?.lon ?? stored?.lon ?? -89.40;
         map = new maplibregl.Map({
           container: mapRef.current,
           style: { version: 8, sources: { osm: { type: 'raster', tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize: 256, attribution: '© OpenStreetMap contributors' } }, layers: [{ id: 'osm', type: 'raster', source: 'osm', minzoom: 0, maxzoom: 19 }] },
-          center: [lon, lat], zoom: 4, interactive: true, attributionControl: { compact: true },
+          center: [lon, lat], zoom: fresh || stored ? 5 : 4, interactive: true, attributionControl: { compact: true },
         });
         const addMarker = (lng: number, lt: number) => {
           const el = document.createElement('div');
           el.style.cssText = 'width:12px;height:12px;border-radius:50%;background:#2563eb;border:2px solid #fff;box-shadow:0 0 0 3px rgba(37,99,235,0.25)';
           new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([lng, lt]).addTo(map);
         };
-        if (stored) map.on('load', () => addMarker(lon, lat));
-
-        // Get fresh geolocation — separated from count so a blocked request doesn't stop counting
-        try {
-          const r = await fetch('https://ipapi.co/json/');
-          const d = await r.json();
-          if (d.latitude) {
-            const fresh = { city: d.city || d.region || 'Unknown', country: d.country_code || '??', lat: d.latitude, lon: d.longitude, ts: Date.now() };
-            setStored(fresh);
-            setStatus({ ...fresh, live: true });
-            map.flyTo({ center: [fresh.lon, fresh.lat], zoom: 5, duration: stored ? 1200 : 0 });
-            map.once('idle', () => addMarker(fresh.lon, fresh.lat));
-          }
-        } catch {}
+        if (fresh || stored) map.on('load', () => addMarker(lon, lat));
       } catch {}
     }
     init();
@@ -227,7 +231,7 @@ function VisitorMap() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#6b7280' }}>
           {status ? (<>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: status.live ? '#22c55e' : '#d1d5db', display: 'inline-block', flexShrink: 0 }} />
-            <span>{status.live ? <strong style={{ color: '#111827' }}>{timeAgo(status.ts)}</strong> : timeAgo(status.ts)} · {status.city}, {status.country}</span>
+            <span>{status.live ? <strong style={{ color: '#111827' }}>{timeAgo(status.ts)}</strong> : timeAgo(status.ts)} · {status.country ? `${status.city}, ${status.country}` : status.city}</span>
           </>) : <span>Locating…</span>}
         </div>
         {count !== null && <span style={{ fontSize: 12, color: '#9ca3af' }}>{count.toLocaleString()} visitors</span>}
@@ -436,10 +440,10 @@ export default function Home() {
             I have always been interested in technology and engineering a better world. Growing up, I watched how access to the right tools and information could change someone&apos;s life entirely. That is what drove me into Computer Science — and after research internships and building real products, I knew this was exactly where I was meant to be.
           </p>
           <p className="hero-bio">
-            I am passionate about Social Innovation, Entrepreneurship, and International Travel. I am an Arsenal and Denver Nuggets fan.
+            I am passionate about Social Innovation, Entrepreneurship, and International Travel. I am an Arsenal and Lakers fan.
           </p>
           <p className="hero-bio">
-            Currently studying <strong>Computer Science and Data Science</strong> at the <strong>University of Wisconsin–Madison</strong>, graduating December 2025.
+            I earned my degree in <strong>Computer Science and Data Science</strong> from the <strong>University of Wisconsin–Madison</strong> in December 2025.
           </p>
           <p className="hero-bio">
             I am always excited to connect — feel free to reach out.
