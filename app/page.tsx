@@ -9,15 +9,14 @@ type OrgEntry = { initials: string; name: string; year: string; role: string; lo
 type ProgramEntry = { initials: string; name: string; program: string; year: string; logo?: string; bg?: string; fg?: string; desc?: string[] };
 
 const experience: OrgEntry[] = [
-  { initials: 'SC', bg: '#6d28d9', fg: '#fff', logo: '/logos/simcodes.svg', name: 'SIMCODES', year: 'May – Sep 2025', role: 'Machine Learning Research Intern', desc: [
-    'Increased AI/ML model accuracy by 12% through feature engineering on simulation datasets exceeding 50 GB.',
-    'Streamlined algorithmic efficiency by up to 62% by developing ML pipelines for metal-ion binding predictions (Python, Bash).',
-    'Modeled 700+ ligand–protein complexes using NumPy, RDKit, and quantum chemistry tools.',
+  { initials: 'FD', bg: '#1493ff', fg: '#fff', name: 'FanDuel', year: 'May 2025 – Jan 2026', role: 'Data Engineer Intern · Atlanta, GA', desc: [
+    'Built a Databricks compute rightsizing tool that parsed Spark event logs to flag over-provisioned clusters, cutting infrastructure spend by $27K/month ($324K annualized).',
+    'Developed a cost estimation app modeling EC2, DBU, and S3 pricing, giving engineers real-time cost visibility before running workloads.',
+    'Exposed both tools via REST APIs consumed by an internal Slack bot, enabling natural-language cost queries and driving adoption across engineering and FinOps teams.',
   ]},
-  { initials: 'WS', bg: '#be185d', fg: '#fff', logo: '/logos/wesparkle.png', name: 'We Sparkle Co.', year: 'Jun – Sep 2024', role: 'Software Engineer Consultant', desc: [
-    'Built a customizable chatbot used by 250+ business owners using React.js and Node.js.',
-    'Designed an intuitive UI enabling non-technical users to configure chatbot behavior.',
-    'Implemented Firebase APIs to store and manage customization choices by business ID.',
+  { initials: 'WS', bg: '#be185d', fg: '#fff', logo: '/logos/wesparkle.png', name: 'We Sparkle Co.', year: 'May – Aug 2024', role: 'Software Engineer Consultant · Remote', desc: [
+    'Developed a customizable chatbot with React.js and Node.js, building the configuration UI used by 250+ business owners to tailor bot behavior.',
+    'Built Firebase-backed APIs to store and retrieve each business\'s customization settings by business ID.',
   ]},
   { initials: 'CFG', bg: '#15803d', fg: '#fff', logo: '/logos/codeforgood.svg', name: 'CodeForGood', year: 'Jan 2024 – Pres', role: 'Software Engineer', desc: [
     'Provided pro-bono technical and computer science assistance to businesses and non-profits in the Madison area.',
@@ -26,8 +25,8 @@ const experience: OrgEntry[] = [
     'Selected for the competitive AT&T 2024 Technology Academy program for top tech talent.',
     'Developed skills in Machine Learning, REST APIs, and enterprise software development.',
   ]},
-  { initials: 'UW', bg: '#c5050c', fg: '#fff', logo: '/logos/uw.svg', name: 'UW–Madison DoIT', year: 'Oct 2022 – Sep 2024', role: 'Help Desk Support Agent', desc: [
-    'Resolved 200+ cases with call times ~40% faster than the department standard.',
+  { initials: 'UW', bg: '#c5050c', fg: '#fff', logo: '/logos/uw.svg', name: 'UW–Madison DoIT', year: 'Sep 2022 – Dec 2025', role: 'Phone Support Agent', desc: [
+    'Resolved 200+ support cases, averaging 40% faster call times than the department standard.',
     'Guided users through software and hardware troubleshooting, translating complex concepts into accessible guidance.',
     'Produced accurate documentation while managing a high volume of customer-facing interactions.',
   ]},
@@ -44,8 +43,7 @@ const experience: OrgEntry[] = [
 
 const involvement: OrgEntry[] = [
   { initials: 'NSBE', bg: '#1e3a5f', fg: '#fbbf24', logo: '/logos/nsbe.svg', name: 'National Society of Black Engineers', year: 'Nov 2022 – Present', role: 'Member', desc: [
-    'Engaged in networking and professional development supporting underrepresented STEM students.',
-    'Contributed to initiatives through collaboration, advocacy, and community outreach.',
+    'Contributed to outreach and advocacy initiatives supporting underrepresented students in STEM, alongside networking and professional development events.',
   ]},
   { initials: 'CS', bg: '#0d9488', fg: '#fff', logo: '/logos/colorstack.svg', name: 'ColorStack', year: '2022 – Present', role: 'Member', desc: [
     'Member of a community supporting Black and Latinx CS students in reaching their full academic and professional potential.',
@@ -57,7 +55,7 @@ const involvement: OrgEntry[] = [
   ]},
   { initials: 'LFS', bg: '#c2410c', fg: '#fff', name: 'Learn From Scratch', year: 'May 2023 – Aug 2024', role: 'Co-founder', desc: [
     'Designed curriculum and facilitated learning for 100 fourth–sixth graders across four semesters.',
-    'Guided students to write their first code and complete open-ended projects building creativity and problem-solving.',
+    'Guided students to write their first code, learn data structures, and complete open-ended projects, building creativity, confidence, and problem-solving.',
   ]},
   { initials: 'BGC', bg: '#003087', fg: '#fff', logo: '/logos/bgc.svg', name: 'Boys & Girls Club', year: 'Aug 2017 – Present', role: 'Graduation Plus Member', desc: [
     'Long-standing member of the Boys & Girls Club Graduation Plus program since 2017.',
@@ -80,6 +78,30 @@ const programs: ProgramEntry[] = [
 
 const projects = [
   {
+    name: 'AI Data Center Supply Chain Control Tower',
+    desc: 'Supply-risk platform (Python ETL, Streamlit) simulating a $6.6B data center buildout across 1,650 orders. Lead-time forecasting models (Random Forest, gradient boosting) cut delivery-planning error 36% (R² 0.84), and a delay-risk classifier (ROC-AUC 0.94, 91% recall) flags at-risk orders with plain-English risk drivers.',
+    tags: ['Python', 'SQL', 'Machine Learning', 'Streamlit'],
+    link: 'https://github.com/Abdifatah2002',
+  },
+  {
+    name: 'NBA Data Engineering Capstone',
+    desc: 'Unified 1M+ rows of BallDontLie API player data with live game events streamed through Confluent Kafka. Airflow-orchestrated Spark jobs land curated tables in Databricks Delta Lake, powering dashboards and Genie conversational analytics on shooting efficiency and defensive leaders.',
+    tags: ['Kafka', 'Airflow', 'Spark', 'Databricks', 'Delta Lake'],
+    link: 'https://github.com/Abdifatah2002',
+  },
+  {
+    name: 'MAANG Stock Data Pipeline',
+    desc: 'Airflow DAG ingesting daily Polygon API stock prices into Apache Iceberg, with data quality checks that block bad loads. Maintains a rolling 7-day cumulative table queried through Trino for low-latency price and volume analytics.',
+    tags: ['Airflow', 'Apache Iceberg', 'Trino', 'Python'],
+    link: 'https://github.com/Abdifatah2002',
+  },
+  {
+    name: 'Walmart Sales Forecasting',
+    desc: 'Weekly sales forecasting model (XGBoost) with lag, rolling-average, and cyclical features at ~6% MAPE, plus an interactive Tableau dashboard surfacing seasonality, holiday impacts, and top-performing stores.',
+    tags: ['Python', 'XGBoost', 'pandas', 'NumPy', 'Tableau'],
+    link: 'https://github.com/Abdifatah2002',
+  },
+  {
     name: 'Abdifataabdi.me',
     desc: 'Personal portfolio website built from scratch. Features a visitor map with real-time geolocation, Cal.com scheduling integration, and company logos pulled from official brand sources.',
     tags: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'MapLibre GL', 'Upstash Redis'],
@@ -87,8 +109,8 @@ const projects = [
   },
   {
     name: 'MyHealthPal',
-    desc: 'GPT-powered virtual health assistant for symptom checks, prevention tips, and geolocated clinic suggestions. Trained a custom neural net on 1.6M+ tweets achieving 94% sentiment accuracy.',
-    tags: ['TensorFlow', 'Spring Boot', 'React', 'Flask', 'Supabase', 'OpenCV'],
+    desc: 'GPT-powered virtual health assistant for symptom checks, prevention tips, and geolocated clinic suggestions. Trained a custom neural net on 1.6M+ tweets reaching 94% sentiment accuracy, added Google TTS for voice guidance, and built OpenCV-based medicine recognition.',
+    tags: ['Next.js', 'TensorFlow', 'Spring Boot', 'Flask', 'Supabase', 'OpenCV'],
     link: 'https://github.com/Abdifatah2002',
   },
   {
@@ -101,8 +123,10 @@ const projects = [
 
 const techCategories = [
   { name: 'Languages',              items: ['Java', 'Python', 'JavaScript', 'SQL', 'HTML/CSS', 'R', 'Bash'] },
-  { name: 'Frameworks & Libraries', items: ['React', 'Node.js', 'Flask', 'Spring Boot', 'Expo', 'Tailwind', 'Firebase', 'PyTorch', 'pandas', 'NumPy', 'Matplotlib'] },
-  { name: 'Tools',                  items: ['Git', 'Docker', 'AWS', 'Google Cloud', 'VS Code', 'IntelliJ', 'PyCharm'] },
+  { name: 'Frameworks & Libraries', items: ['React', 'Next.js', 'React Native', 'Node.js', 'Flask', 'Spring Boot', 'Expo', 'Tailwind', 'JUnit', 'PyTorch', 'TensorFlow', 'XGBoost', 'pandas', 'NumPy', 'Matplotlib'] },
+  { name: 'Data Engineering',       items: ['Spark', 'Databricks', 'Delta Lake', 'Kafka', 'Airflow', 'Apache Iceberg', 'Trino'] },
+  { name: 'Databases & Analytics',  items: ['PostgreSQL', 'MySQL', 'Supabase', 'Firebase', 'Power BI', 'Tableau', 'Excel', 'Power Query', 'Streamlit'] },
+  { name: 'Tools & Cloud',          items: ['Git', 'Docker', 'AWS', 'Google Cloud', 'VS Code', 'Visual Studio', 'IntelliJ', 'PyCharm'] },
 ];
 
 type Post = { date: string; title: string; lede?: string; paragraphs: string[] };
@@ -431,7 +455,7 @@ export default function Home() {
         {/* ── Hero ── */}
         <section className="hero" id="about">
           <h1>Abdifatah Abdi</h1>
-          <p className="hero-sub">Software Engineer &amp; Data Science · UW–Madison</p>
+          <p className="hero-sub">Software &amp; Data Engineer · UW–Madison CS &amp; Data Science</p>
 
           <p className="hero-bio">
             Welcome to my portfolio site! I&apos;m Abdifatah, a <strong>Computer Science and Data Science</strong> graduate from the <strong>University of Wisconsin–Madison</strong>, excited to share my array of experiences and projects. They reflect both my academic growth and boundless enthusiasm for technology.
@@ -626,7 +650,7 @@ export default function Home() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
           </a>
         </div>
-        <span className="footer-copy">© 2025 Abdifatah Abdi</span>
+        <span className="footer-copy">© 2026 Abdifatah Abdi</span>
       </footer>
     </>
   );
